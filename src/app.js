@@ -1,21 +1,18 @@
 const express = require('express');
-const fs = require('fs').promises;
-const path = require('path');
+const { readFile } = require('./fsUtils');
 
 const app = express();
 
-const moviesPath = path.resolve(__dirname, './movies.json');
+app.get('./movies/:id', async (req, res) => {
+  const { id } = req.params;
 
-const readFile = async () => {
   try {
-    const data = await fs.readFile(moviesPath);
-    return JSON.parse(data);
+    const movies = await readFile();
+    const findMovie = movies.find((movie) => movie.id === Number(id));
+    res.status(200).json(findMovie);
   } catch (error) {
-    console.error(`Arquivo não pôde ser lido: ${error}`);
+    res.status(404).send({ message: error.message });
   }
-};
+});
 
-module.exports = {
-  app,
-  readFile,
-};
+module.exports = app;
