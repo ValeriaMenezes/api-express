@@ -4,10 +4,10 @@
     "movie": "Avatar",
     "price": 5
   },
-   {
+  {
     "id": 2,
-    "movie": "Gente Grande",
-    "price": 2
+    "movie": "O gato de botas",
+    "price": "10"
   },
   {
     "id": 3,

@@ -31,8 +31,8 @@ app.get('/movies', async (req, res) => {
 
 app.post('/movies', async (req, res) => {
   try {
-    const movies = await readFile();
     const { movie, price } = req.body;
+    const movies = await readFile();
 
     const newMovie = {
       id: movies.length + 1,
@@ -42,6 +42,21 @@ app.post('/movies', async (req, res) => {
     const allMovies = JSON.stringify([...movies, newMovie]);
     await fs.writeFile(moviesPath, allMovies);
     res.status(201).json(newMovie);
+  } catch (error) {
+    res.status(404).send({ message: error.message });
+  }
+});
+
+app.put('/movies/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { movie, price } = req.body;
+    const movies = await readFile();
+    const index = movies.findIndex((element) => element.id === Number(id));
+    movies[index] = { id: Number(id), movie, price };
+    const updatedMovies = JSON.stringify(movies, null, 2);
+    await fs.writeFile(moviesPath, updatedMovies);
+    res.status(200).json(movies[index]);
   } catch (error) {
     res.status(404).send({ message: error.message });
   }
